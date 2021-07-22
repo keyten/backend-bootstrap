@@ -1,0 +1,15 @@
+db:
+  user: postgres
+  password: qwerty
+  database: postgres
+  host: 127.0.0.1
+  port: 5433
+
+sessionSecret: qwerty
+
+# https://console.cloud.google.com/apis/credentials
+socialLogin:
+  google:
+    clientID: ''
+    clientSecret: ''
+    callbackURL: ''

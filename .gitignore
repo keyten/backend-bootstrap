@@ -1,3 +1,10 @@
+# Project
+build/
+
+# Configs
+config/development.yml
+config/production.yml
+
 # Logs
 logs
 *.log

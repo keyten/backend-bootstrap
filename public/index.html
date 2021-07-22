@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Index project page</title>
+
+		<meta name="google-signin-client_id" content="69490746766-t0mq8coq0snkmsa214gqiosi5c3gmsl8.apps.googleusercontent.com">
+	</head>
+	<body>
+		Config is here: <pre><code>{{config}}</code></pre>
+
+		<div>
+			<h1>Login</h1>
+			<input type="text" id="login-text" />
+			<input type="password" id="login-password" />
+			<button id="login-send">Send</button>
+		</div>
+
+		<div>
+			<h1>Register</h1>
+			<input type="text" id="reg-text" />
+			<input type="password" id="reg-password" />
+			<button id="reg-send">Send</button>
+		</div>
+
+		<div>
+			<h1>Check if user exists</h1>
+			<input type="text" id="check-text" />
+			<button id="check-send">Send</button>
+		</div>
+
+		<div>
+			<h1>Logout</h1>
+			<button id="logout">Send</button>
+		</div>
+
+		<div id="google-container">
+			<h1>Google login</h1>
+			<button id="google-open">Open</button>
+		</div>
+
+		<script>
+			// login
+			const login = (data) => {
+				return fetch('/api/auth/login', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify(data)
+				}).then(console.log);
+			};
+
+			document.getElementById('login-send').addEventListener('click', () => {
+				login({
+					username: document.getElementById('login-text').value,
+					password: document.getElementById('login-password').value
+				}).then(val => {
+					val.json().then(v => alert(JSON.stringify(v)));
+				});
+			});
+
+			// register
+			const register = (data) => {
+				return fetch('/api/auth/register', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify(data)
+				}).then(console.log);
+			};
+
+			document.getElementById('reg-send').addEventListener('click', () => {
+				register({
+					username: document.getElementById('reg-text').value,
+					password: document.getElementById('reg-password').value
+				}).then(val => {
+					val.json().then(v => alert(JSON.stringify(v)));
+				});
+			});
+
+			// check if user exists
+			const check = (login) => {
+				return fetch('/api/auth/user-exist?login=' + login);
+			}
+
+			document.getElementById('check-send').addEventListener('click', () => {
+				check(
+					document.getElementById('check-text').value
+				).then(val => {
+					val.json().then(v => alert(JSON.stringify(v)));
+				});
+			});
+
+			// logout
+			const logout = () => {
+				return fetch('/api/auth/logout', {
+					method: 'POST'
+				});
+			}
+
+			document.getElementById('logout').addEventListener('click', () => {
+				logout().then(val => {
+					val.json().then(v => alert(JSON.stringify(v)));
+				});
+			});
+
+			// google
+			document.getElementById('google-open').addEventListener('click', () => {
+				location.href = '/api/auth/google';
+			});
+		</script>
+
+<!--
+		<div id="my-signin2"></div>
+		<script>
+			function onSuccess(googleUser) {
+				// https://developers.google.com/identity/sign-in/web/backend-auth
+				console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+			}
+
+			function onFailure(error) {
+				console.log(error);
+			}
+
+			function renderButton() {
+				gapi.signin2.render('my-signin2', {
+					'scope': 'profile email',
+					'width': 240,
+					'height': 50,
+					'longtitle': true,
+					'theme': 'dark',
+					'onsuccess': onSuccess,
+					'onfailure': onFailure
+				});
+			}
+		</script>
+
+		<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+-->
+	</body>
+</html>
