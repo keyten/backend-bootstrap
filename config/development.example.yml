@@ -1,4 +1,5 @@
 db:
+  url: ''
   user: postgres
   password: qwerty
   database: postgres

@@ -40,8 +40,8 @@
 	},
 	"scripts": {
 		"dev": "npx cross-env NODE_ENV=development nodemon ./src/app.ts --inspect ./public",
-		"start": "node ./build/app.js",
-		"build:backend": "tsc --project ./",
+		"start": "node ./build/src/app.js",
+		"build:backend": "rm -rf ./build && tsc --project ./ && cp -r ./config ./build/config && node ./build/src/migration/build-create-config.js",
 		"build": "npm run build:backend"
 	},
 	"repository": {
