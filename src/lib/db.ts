@@ -2,7 +2,9 @@ import {Pool} from 'pg';
 import knexClient from 'knex';
 import config from './config';
 
-export const pool = new Pool(config.db);
+export const pool = new Pool({
+	connectionString: config.db.url
+});
 export default async function(query: string) {
 	return new Promise((resolve, reject) => {
 		pool.connect((err, client) => {
