@@ -2,7 +2,14 @@ import {Sequelize} from 'sequelize';
 import config from '../lib/config';
 
 export const sequelize = new Sequelize(config.db.url, {
-	dialect: 'postgres'
+	dialect: 'postgres',
+	ssl: false,
+	dialectOptions: {
+		ssl: {
+			require: false,
+			rejectUnauthorized: false
+		}
+	},
 });
 /* {
 	username: config.db.user,

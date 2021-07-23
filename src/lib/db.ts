@@ -2,9 +2,15 @@ import {Pool} from 'pg';
 import knexClient from 'knex';
 import config from './config';
 
+export const knex = knexClient({ client: 'pg' });
+
 export const pool = new Pool({
-	connectionString: config.db.url
+	connectionString: config.db.url,
+	ssl: {
+		rejectUnauthorized: false
+	}
 });
+
 export default async function(query: string) {
 	return new Promise((resolve, reject) => {
 		pool.connect((err, client) => {
@@ -25,5 +31,3 @@ export default async function(query: string) {
 		});
 	});
 }
-
-export const knex = knexClient({ client: 'pg' });
