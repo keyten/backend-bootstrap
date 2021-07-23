@@ -11,15 +11,6 @@ export const sequelize = new Sequelize(config.db.url, {
 		}
 	},
 });
-/* {
-	username: config.db.user,
-	password: config.db.password,
-	database: config.db.database,
-	host: config.db.host,
-	port: config.db.port,
-
-	dialect: 'postgres'
-} */
 
 if (process.env.TESTING_MODE === 'TRUE') {
 	sequelize.authenticate().then(() => {
