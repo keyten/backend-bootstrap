@@ -1,7 +1,7 @@
 import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth';
-import config from '../lib/config';
+import { googleCredentials } from '../lib/secret-config';
 import {User} from '../models/';
 import { AUTH_PROVIDER } from './providers';
 
@@ -63,9 +63,7 @@ passport.use(new LocalStrategy((username, password, done) => {
 	}, done);
 }));
 
-passport.use(new GoogleStrategy({
-    ...config.socialLogin.google
-}, (accessToken, refreshToken, profile, done) => {
+passport.use(new GoogleStrategy(googleCredentials, (accessToken, refreshToken, profile, done) => {
 	done(null, {
 		provider: AUTH_PROVIDER.GOOGLE,
 		profile

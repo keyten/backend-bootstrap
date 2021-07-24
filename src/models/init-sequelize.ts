@@ -1,7 +1,7 @@
 import {Sequelize} from 'sequelize';
-import config from '../lib/config';
+import { databaseUrl } from '../lib/secret-config';
 
-export const sequelize = new Sequelize(config.db.url, {
+export const sequelize = new Sequelize(databaseUrl, {
 	dialect: 'postgres',
 	ssl: false,
 	dialectOptions: {

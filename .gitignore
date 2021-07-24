@@ -2,6 +2,7 @@
 build/
 
 # Configs
+/config/development.env
 
 # Logs
 logs

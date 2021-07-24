@@ -1,6 +1,6 @@
 # backend-bootstrap
 
-- Express с разными middleware для CSP, логгирования, сессий.
+- Express с разными middleware для CSP, логгирования, сессий, конфига.
 - Postgres (knex как сборщик запросов, sequelize как ORM).
 - Авторизация на Passport + социальная авторизация через Google.
 
@@ -13,16 +13,21 @@
 
 Развертка для дева:
 1. Склонировать, npm install.
-2. Скопировать configs/development.example.env в configs/development.env
+2. Скопировать configs/development.example.yml в configs/development.yml, добавить данные бд.
 3. Запустить миграции из src/migrations/
 
 #### Разработка
-- **npm run dev** -- запускает дев .
+- **npm run dev** -- запускает дев.
+
 - **npm run build** -- запускает build:backend && build:frontend.
 - **npm run start** -- запускает собранный бэк.
 
 #### Конфиг
-В /config/ есть конфиги, они коммитятся, в них можно добавлять разные несекретные настройки. Секретные это db credentials, google auth id, etc.
+В /config/ есть конфиги, их можно коммитить, в них разные несекретные настройки.
 
-- Дев: добавляем в /config/development.env.
-- Prod: добавляем в переменные окружения.
+Секретные это db credentials, google auth id, etc, они добавляются:
+- Дев: в /config/development.env.
+- Prod: в переменные окружения.
+
+Адрес БД: `postgresql://[user[:password]@][netloc][:port][,...][/dbname][?param1=value1&...]`
+Google Credentials: https://console.cloud.google.com/apis/credentials
