@@ -15,8 +15,11 @@ import routes from './routes';
 const port = process.env.PORT || 3000;
 const app = express();
 
-app.use(dev);
-app.options('*', dev);
+if (process.env.NODE_ENV === 'development') {
+	app.use(dev);
+	app.options('*', dev);	
+}
+
 app.use(helmet);
 app.use(logRequest);
 app.use(session);

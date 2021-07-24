@@ -1,9 +1,6 @@
-# don`t change secret values (db credentials, sessionSecret, socialLogin data) here
-# put them in development.env file
-
 db:
   # postgresql://[user[:password]@][netloc][:port][,...][/dbname][?param1=value1&...]
-  url: postgresql://postgres:qwerty@127.0.0.1:5433/postgres
+  url: ''
 
 sessionSecret: qwerty
 
