@@ -8,12 +8,12 @@
 1. Добавить репозиторий.
 2. Добавить Postgres, убедиться, что в Config Vars добавился DATABASE_URL.
 3. TESTING_MODE = TRUE добавляет доп. проверки, выводы в консоль, что всё подключилось и всё норм.
-4. Конфигурируем переменные окружения SESSION_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL.
+4. Конфигурируем переменные окружения SESSION_SECRET (любая рандомная строка), GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL (тут https://console.cloud.google.com/apis/credentials).
 5. Зайти и запустить файлы миграции из папки ./build/src/migrations/ по порядку (кроме build-*).
 
 Развертка для дева:
 1. Склонировать, npm install.
-2. Скопировать configs/development.example.yml в configs/development.yml, добавить данные бд.
+2. Скопировать configs/development.example.env в configs/development.env, добавить данные бд.
 3. Запустить миграции из src/migrations/
 
 #### Разработка
@@ -30,4 +30,3 @@
 - Prod: в переменные окружения.
 
 Адрес БД: `postgresql://[user[:password]@][netloc][:port][,...][/dbname][?param1=value1&...]`
-Google Credentials: https://console.cloud.google.com/apis/credentials
