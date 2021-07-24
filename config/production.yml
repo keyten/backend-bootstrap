@@ -5,6 +5,5 @@ dbConfig:
 sequelizeConfig:
     ssl: false
     dialectOptions:
-        ssl:
         require: false
         rejectUnauthorized: false
