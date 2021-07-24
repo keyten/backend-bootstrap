@@ -10,6 +10,11 @@ export const pool = new Pool({
 	...config.dbConfig
 });
 
+console.log({
+	connectionString: databaseUrl,
+	...config.dbConfig
+})
+
 export default async function(query: string) {
 	return new Promise((resolve, reject) => {
 		pool.connect((err, client) => {
