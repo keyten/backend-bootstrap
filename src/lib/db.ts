@@ -1,14 +1,13 @@
-import {Pool} from 'pg';
+import { Pool } from 'pg';
 import knexClient from 'knex';
+import config from '../lib/config';
 import { databaseUrl } from '../lib/secret-config';
 
 export const knex = knexClient({ client: 'pg' });
 
 export const pool = new Pool({
 	connectionString: databaseUrl,
-	ssl: {
-		rejectUnauthorized: false
-	}
+	...config.dbConfig
 });
 
 export default async function(query: string) {

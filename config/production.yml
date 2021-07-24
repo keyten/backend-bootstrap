@@ -1,1 +1,10 @@
-abc: true
+dbConfig:
+  ssl:
+    rejectUnauthorized: false
+
+sequelizeConfig:
+	ssl: false
+	dialectOptions:
+		ssl:
+			require: false
+			rejectUnauthorized: false
