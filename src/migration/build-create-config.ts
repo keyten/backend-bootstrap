@@ -3,8 +3,9 @@ import path from 'path';
 import yaml from 'yaml';
 
 const configPath = path.join(__dirname, `../../config/production.yml`);
-
-fs.writeFileSync(configPath, yaml.stringify({
+const configText = fs.readFileSync(configPath, {encoding: 'utf-8'});
+const configValue = yaml.parse(configText);
+Object.assign(configValue, {
 	db: {
 		url: process.env.DATABASE_URL
 	},
@@ -18,4 +19,6 @@ fs.writeFileSync(configPath, yaml.stringify({
 			callbackURL: process.env.GOOGLE_CALLBACK_URL
 		}
 	}
-}));
+});
+
+fs.writeFileSync(configPath, yaml.stringify(configValue));

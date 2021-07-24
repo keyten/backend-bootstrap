@@ -33,6 +33,7 @@
 		"@types/passport-local": "^1.0.33",
 		"@types/validator": "^13.6.3",
 		"crossenv": "0.0.2-security",
+		"dotenv": "^10.0.0",
 		"nodemon": "^2.0.7",
 		"prettier": "^2.2.1",
 		"ts-node": "^9.1.1",
@@ -40,7 +41,6 @@
 	},
 	"scripts": {
 		"dev": "npx cross-env NODE_ENV=development nodemon ./src/app.ts --inspect ./public",
-
 		"start": "node ./build/src/app.js",
 		"build:backend": "rm -rf ./build && tsc --project ./ && cp -r ./config ./build/config && node ./build/src/migration/build-create-config.js && cp -r ./public ./build/public",
 		"build": "npm run build:backend"

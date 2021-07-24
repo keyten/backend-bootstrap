@@ -1,10 +1,6 @@
 db:
-  url: ''
-  user: postgres
-  password: qwerty
-  database: postgres
-  host: 127.0.0.1
-  port: 5433
+  # postgresql://[user[:password]@][netloc][:port][,...][/dbname][?param1=value1&...]
+  url: postgresql://postgres:qwerty@127.0.0.1:5433/postgres
 
 sessionSecret: qwerty
 

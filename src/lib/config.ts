@@ -6,3 +6,7 @@ import env from './env';
 const configPath = path.join(__dirname, `../../config/${env}.yml`);
 const configText = fs.readFileSync(configPath, {encoding: 'utf-8'});
 export default yaml.parse(configText);
+
+if (process.env.TESTING_MODE === 'TRUE') {
+	console.log('Config installed:\n' + configText);
+}
