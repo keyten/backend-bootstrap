@@ -4,13 +4,7 @@ import { databaseUrl } from '../lib/secret-config';
 
 export const sequelize = new Sequelize(databaseUrl, {
 	dialect: 'postgres',
-	ssl: false,
-	dialectOptions: {
-		ssl: {
-			require: false,
-			rejectUnauthorized: false
-		}
-	},
+	...config.sequelizeConfig
 });
 
 if (process.env.TESTING_MODE === 'TRUE') {
