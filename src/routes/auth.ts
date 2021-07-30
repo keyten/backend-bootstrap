@@ -5,35 +5,6 @@ import {bodyParserJson} from '../middlewares/';
 import { User } from '../models';
 
 export default Router()
-	.get('/user-exist/', async (req, res) => {
-		const query = req.query as {
-			login?: string;
-		};
-
-		if (!query.login) {
-			res.statusCode = 400;
-			res.end();
-			return;
-		}
-
-		res.json(
-			await User.isUserExist(query.login)
-		);
-	})
-
-	.post('/login', [
-		bodyParserJson,
-		passport.authenticate('local'),
-		(req: Request, res: Response) => {
-			res.json(true);
-		}
-	])
-
-	.post('/logout', (req: Request, res: Response) => {
-		req.logout();
-		res.json(true);
-	})
-
 	.post('/register', [
 		bodyParserJson,
 		async (req: Request, res: Response) => {
@@ -68,6 +39,35 @@ export default Router()
 			}
 		}
 	])
+
+	.post('/login', [
+		bodyParserJson,
+		passport.authenticate('local'),
+		(req: Request, res: Response) => {
+			res.json(true);
+		}
+	])
+
+	.post('/logout', (req: Request, res: Response) => {
+		req.logout();
+		res.json(true);
+	})
+
+	.get('/user-exist/', async (req, res) => {
+		const query = req.query as {
+			login?: string;
+		};
+
+		if (!query.login) {
+			res.statusCode = 400;
+			res.end();
+			return;
+		}
+
+		res.json(
+			await User.isExistByUsernameOrEmail(query.login)
+		);
+	})
 
 	.get('/google',
 		passport.authenticate('google', {

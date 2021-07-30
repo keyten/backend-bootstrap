@@ -1,90 +1,106 @@
 import md5 from 'md5';
 import {Model, Op, DataTypes} from 'sequelize';
 import {sequelize} from './init-sequelize';
+import { AUTH_PROVIDER } from '../auth/providers';
 
-export const userProviders = {
-	0: 'local'
-};
-
-function whereCondition(login: string) {
-	return {
-		where: {
-			[Op.or]: [{
-				username: login
-			}, {
-				email: login
-			}]
-		}
-	}
+interface UserAttributes {
+	id?: number;
+	username: string;
+	password?: string;
+	avatar?: string;
+	email?: string;
+	provider: AUTH_PROVIDER;
+	providerId?: string;
 }
 
-class User extends Model {
-	static async isUserExist(login: string){
+const attributes = [
+	'id',
+	'username',
+	'password',
+	'avatar',
+	'email'
+];
+
+class User extends Model<UserAttributes, UserAttributes> {
+	public id!: number;
+	public username!: string;
+	public password?: string;
+	public avatar?: string;
+	public email?: string;
+	public provider!: AUTH_PROVIDER;
+	public providerId?: string;
+
+	static async isExistByUsernameOrEmail(login: string) {
 		const response = await User.findOne({
-			...whereCondition(login),
-			attributes: ['id']
+			attributes: ['id'],
+			where: {
+				[Op.or]: [{ username: login }, { email: login }]
+			},
 		});
 		return response !== null;
 	}
 
-	static findUser(login: string) {
+	static async isExistByUsername(username: string) {
+		const response = await User.findOne({
+			attributes: ['id'],
+			where: {
+				[Op.or]: [{ username }]
+			},
+		});
+		return response !== null;
+	}
+
+	static findByLoginOrEmail(login: string) {
 		return User.findOne({
-			...whereCondition(login),
-			attributes: [
-				'id',
-				'username',
-				'password',
-				'provider',
-				'avatar',
-				'email'
-			]
+			attributes,
+			where: {
+				[Op.or]: [{ username: login }, { email: login }]
+			},
 		});
 	}
 
-	static findById(id: number | string) {
+	static findById(id: number) {
 		return User.findOne({
-			where: { id },
-			attributes: [
-				'id',
-				'username',
-				'avatar',
-				'password'
-			]
+			attributes,
+			where: { id }
 		})
 	}
 
-	static async checkLogin(login: string, password: string) {
+	static async getUserByLoginAndPassword(login: string, password: string) {
 		const user = await User.findOne({
-			...whereCondition(login),
-			attributes: [
-				'id',
-				'username',
-				'avatar',
-				'password'
-			]
+			attributes,
+			where: {
+				[Op.or]: [{ username: login }, { email: login }]
+			}
 		});
 
 		if (!user) {
 			return null;
 		}
 
-		const dataValues = (user as any).dataValues;//.getDataValue();
-
-		if (!dataValues) {
-			return null;
-		}
-
-		if (md5(password) === dataValues.password) {
-			delete dataValues.password;
-			return dataValues;
+		// user.password бывает '' для социальных юзеров
+		if (user.password !== '' && md5(password) === user.password) {
+			const { password, ...data } = user.toJSON() as any;
+			return data;
 		}
 
 		return null;
 	}
-}
 
-// https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-// https://habr.com/ru/company/ruvds/blog/335434/
+	static async findByGoogleData(email: string, providerId: string) {
+		return User.findOne({
+			attributes,
+			where: {
+				[Op.or]: [{
+					email
+				}, {
+					provider: AUTH_PROVIDER.GOOGLE,
+					providerId
+				}]
+			},
+		});
+	}
+}
 
 User.init({
 	username: {
@@ -92,16 +108,16 @@ User.init({
 		allowNull: false,
 		unique: true
 	},
-	password: {
-		type: DataTypes.STRING,
-		allowNull: false
-	},
+	// password бывает null для соц. юзеров
+	password: DataTypes.STRING,
+	avatar: DataTypes.STRING,
+	email: DataTypes.STRING,
+
 	provider: {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},
-	avatar: DataTypes.STRING,
-	email: DataTypes.STRING
+	providerId: DataTypes.STRING
 }, {
 	indexes: [{
 		unique: true,
@@ -109,8 +125,14 @@ User.init({
 	}, {
 		unique: true,
 		fields: ['email']
+	}, {
+		unique: true,
+		fields: ['provider', 'providerId']
 	}],
 	sequelize
 });
+
+// todo: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+// todo: https://habr.com/ru/company/ruvds/blog/335434/
 
 export default User;

@@ -1,76 +1,33 @@
 import passport from 'passport';
-import {Strategy as LocalStrategy} from 'passport-local';
-import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth';
-import { googleCredentials } from '../lib/secret-config';
-import {User} from '../models/';
-import { AUTH_PROVIDER } from './providers';
+import { User } from '../models/';
 
-interface GoogleProfile {
-	id: string;
-	displayName: string;
-	name: {
-		familyName: string;
-		givenName: string;
-	};
-	emails: {}[];
-	photos: {}[];
+import LocalStrategy from './strategies/local-strategy';
+import GoogleStrategy from './strategies/google-strategy';
+
+function serializeUser(user: any, done: Function){
+	// вызывается при авторизации
+	// получаем id юзера, этот id будет храниться в сессии
+	// когда запрос приходит в passport middleware, он будет
+	// запускать deserializeUser, чтобы по этому id получить данные юзера
+	// в user лежит то, что вызвала стратегия в done (у нас тут это всегда User)
+	done(null, user.id);
 }
 
-type ProcessedUser = {
-	provider: AUTH_PROVIDER.LOCAL;
-	profile: any;
-} | {
-	provider: AUTH_PROVIDER.GOOGLE;
-	profile: GoogleProfile;
+async function deserializeUser(id: number, done: Function){
+	// при каждом запросе в middleware вызывается
+	// и по сохраненному в сессии id возвращает данные юзера
+	const user = await User.findById(id);
+	done(null, {
+		id: user?.id,
+		username: user?.username,
+		avatar: user?.avatar,
+		email: user?.email
+	})
 }
 
-// common things
-passport.deserializeUser(function(id: ProcessedUser, done){
-	/* User.findById(id).then(data => {
-		if (data) {
-			const user = data.toJSON() as any;
-			delete user.password;
-			done(null, user);
-		} else {
-			done(null);
-		}
-	}, err => {
-		done(err);
-	}); */
-	console.log(id);
-	done(null, {});
-});
+passport.serializeUser(serializeUser);
+passport.deserializeUser(deserializeUser);
 
-passport.serializeUser(function(user: any, done){
-	console.log(user);
-	done(null, {
-		provider: user.provider,
-		id: user.profile.id
-	});
-});
-
-// strategies
-passport.use(new LocalStrategy((username, password, done) => {
-	User.checkLogin(username, password).then(data => {
-		if (data) {
-			done(null, {
-				provider: AUTH_PROVIDER.LOCAL,
-				profile: data
-			});
-		} else {
-			done(null, false);
-		}
-	}, done);
-}));
-
-passport.use(new GoogleStrategy(googleCredentials, (accessToken, refreshToken, profile, done) => {
-	done(null, {
-		provider: AUTH_PROVIDER.GOOGLE,
-		profile
-	});
-/*
-      User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
-*/
-}));
+// Local это обычные пользователи сайта
+passport.use(LocalStrategy);
+passport.use(GoogleStrategy);

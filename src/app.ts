@@ -28,9 +28,6 @@ app.use(passport);
 app.use(config);
 
 app.use(routes);
-app.get('/', (req, res) => {
-	res.send('abc');
-});
 
 app.use(error404);
 app.use(error500);

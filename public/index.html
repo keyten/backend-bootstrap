@@ -45,7 +45,10 @@
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
 					body: JSON.stringify(data)
-				}).then(console.log);
+				}).then(v => {
+					console.log(v);
+					return v;
+				});
 			};
 
 			document.getElementById('login-send').addEventListener('click', () => {
@@ -53,7 +56,14 @@
 					username: document.getElementById('login-text').value,
 					password: document.getElementById('login-password').value
 				}).then(val => {
-					val.json().then(v => alert(JSON.stringify(v)));
+					if (val.status === 200) {
+						val.json().then(v => alert(JSON.stringify(v)));
+						location.reload();
+					} else if (val.status === 401) {
+						alert('Unauthorized');
+					} else {
+						alert('Unknown error');
+					}
 				});
 			});
 
@@ -63,7 +73,10 @@
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
 					body: JSON.stringify(data)
-				}).then(console.log);
+				}).then(v => {
+					console.log(v);
+					return v;
+				});
 			};
 
 			document.getElementById('reg-send').addEventListener('click', () => {
@@ -98,6 +111,7 @@
 			document.getElementById('logout').addEventListener('click', () => {
 				logout().then(val => {
 					val.json().then(v => alert(JSON.stringify(v)));
+					location.reload();
 				});
 			});
 
