@@ -39,7 +39,6 @@
 	},
 	"scripts": {
 		"dev": "npx nodemon -r dotenv/config ./src/app.ts --inspect ./public dotenv_config_path=./config/development.env",
-
 		"start": "node ./build/src/app.js",
 		"build:backend": "rm -rf ./build && tsc --project ./ && cp -r ./config ./build/config && cp -r ./public ./build/public",
 		"build": "npm run build:backend"
