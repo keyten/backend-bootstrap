@@ -3,8 +3,9 @@ import {
 } from '../models';
 import { promiseReduce } from '../lib/utils';
 
-promiseReduce<any>([
+export default () => promiseReduce<any>([
 	() => User.sync({ force: true }),
-]).then(() => {
+]);
+/* .then(() => {
 	console.log('Migration is completed');
-}, console.error);
+}, console.error); */
