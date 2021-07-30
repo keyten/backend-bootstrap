@@ -21,26 +21,31 @@ const onUserGoogleLogin = async (
 	const email = profile.emails![0].value;
 
 	// первым делом нужно узнать, зарегистрирован ли он уже
-	let user = await User.findByGoogleData(email, profile.id);
+	try {
+		let user = await User.findByGoogleData(email, profile.id);
 
-	// если нет, то регистрируем
-	if (!user) {
-		const avatar = profile.photos && profile.photos[0]?.value;
-		try {
-			user = await User.create({
-				username: await makeUpUsername(email, profile.displayName),
-				avatar,
-				email,
-				provider: AUTH_PROVIDER.GOOGLE,
-				providerId: profile.id
-			});
-		} catch (e) {
-			done(e);
-			return;
+		// если нет, то регистрируем
+		if (!user) {
+			const avatar = profile.photos && profile.photos[0]?.value;
+			try {
+				user = await User.create({
+					username: await makeUpUsername(email, profile.displayName),
+					avatar,
+					email,
+					provider: AUTH_PROVIDER.GOOGLE,
+					providerId: profile.id
+				});
+			} catch (e) {
+				done(e);
+				return;
+			}
 		}
-	}
 
-	done(null, user);
+		done(null, user);
+	} catch (e) {
+		done(e);
+		return;
+	}
 }
 
 const makeUpUsername = async (email: string, displayName: string) => {
